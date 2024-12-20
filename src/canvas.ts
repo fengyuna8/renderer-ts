@@ -28,7 +28,14 @@ export default class Canvas {
         canvas.width = width
         canvas.height = height
         this.context = canvas.getContext('2d') as CanvasRenderingContext2D
-        this.imageData = this.context.createImageData(width, height)
+        {
+            this.context.fillStyle = '#000'
+            const w = this.context.canvas.width
+            const h = this.context.canvas.height
+            this.context.rect(0, 0, w, h)
+            this.context.fill()
+        }
+        this.imageData = this.context.getImageData(0, 0, canvas.width, canvas.height)
         this.scene = Scene.new(this)
         requestAnimationFrame(this.runLoop.bind(this))
     }
@@ -54,7 +61,7 @@ export default class Canvas {
         this.drawFps()
     }
     private drawFps() {
-        this.context.fillStyle = 'black'
+        this.context.fillStyle = 'white'
         this.context.font = '16px monospace'
         const s = `FPS: ${this.data.fps.toFixed(2)}`
         this.context.fillText(s, 10, 20)
