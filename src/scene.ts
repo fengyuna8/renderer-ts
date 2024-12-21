@@ -53,7 +53,9 @@ export default class Scene {
             let error = 0
             let y = y1
             for (let x = x1; (signX > 0) ? (x <= x2) : (x >= x2); x += signX) {
-                this.setPixel(x, y, start.color)
+                const factor = (x - x1) / (x2 - x1)
+                const color = start.color.interpolate(end.color, factor)
+                this.setPixel(x, y, color)
                 error += dy
                 if (2 * error >= dx) {
                     y += signY
@@ -64,7 +66,9 @@ export default class Scene {
             let error = 0
             let x = x1;
             for (let y = y1; (signY > 0) ? (y <= y2) : (y >= y2); y += signY) {
-                this.setPixel(x, y, start.color)
+                const factor = (y - y1) / (y2 - y1)
+                const color = start.color.interpolate(end.color, factor)
+                this.setPixel(x, y, color)
                 error += dx
                 if (2 * error >= dy) {
                     x += signX

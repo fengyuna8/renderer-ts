@@ -33,7 +33,7 @@ const testDrawLines = (canvas: Canvas) => {
         const y2 = randomIntBetween(0, h)
         const p1 = Vector.new(x1, y1, 0)
         const p2 = Vector.new(x2, y2, 0)
-        const line = Line.new(Vertex.new(p1, Color.red()), Vertex.new(p2, Color.red()))
+        const line = Line.new(Vertex.new(p1, Color.randomColor()), Vertex.new(p2, Color.randomColor()))
         scene.addLine(line)
     }
 }
