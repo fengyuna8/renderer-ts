@@ -10,4 +10,10 @@ export default class Vector {
         this.y = y
         this.z = z
     }
+    interpolate(vector: Vector, factor: number): Vector {
+        const x = this.x + (vector.x - this.x) * factor
+        const y = this.y + (vector.y - this.y) * factor
+        const z = this.z + (vector.z - this.z) * factor
+        return Vector.new(x, y, z)
+    }
 }

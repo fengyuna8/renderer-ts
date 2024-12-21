@@ -4,11 +4,7 @@ import { randomIntBetween } from "./utils.ts"
 import Vertex from "./vertex.ts"
 import Color from "./color.ts"
 import Line from "./line.ts"
-
-class Config {
-    static width: number = 800
-    static height: number = 600
-}
+import Config from "./config.ts"
 
 const testDrawPoints = (canvas: Canvas) => {
     const scene = canvas.getScene()
@@ -18,7 +14,7 @@ const testDrawPoints = (canvas: Canvas) => {
         const position = Vector.new(x, y, 0)
         const color = Color.randomColor()
         const p = Vertex.new(position, color)
-        scene.add(p)
+        scene.addPoint(p)
     }
 }
 
