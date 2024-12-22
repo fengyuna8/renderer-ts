@@ -17,6 +17,9 @@ export default class Color {
     static blue() {
         return this.new(0, 0, 255, 255)
     }
+    static white() {
+        return this.new(255, 255, 255, 255)
+    }
     static black() {
         return this.new(0, 0, 0, 255)
     }

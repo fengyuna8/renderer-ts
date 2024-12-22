@@ -6,6 +6,7 @@ import Color from "./color.ts"
 import Line from "./line.ts"
 import Config from "./config.ts"
 import Triangle from "./triangle.ts"
+import Model from "./model.ts"
 
 const testDrawPoints = (canvas: Canvas) => {
     const scene = canvas.getScene()
@@ -57,14 +58,33 @@ const testDrawTriangles = (canvas: Canvas) => {
     }
 }
 
+const testDrawModelPoint = async (canvas: Canvas) => {
+    const model = await Model.parseObj('/obj/african_head.obj')
+    const vertices = model.vertices
+    const scene = canvas.getScene()
+
+    const w = Config.width
+    const h = Config.height
+
+    for (const v of vertices) {
+        const x = Math.floor((v.position.x + 1) / 2 * w)
+        // flip Y
+        const y = h - Math.floor((v.position.y + 1) / 2 * h)
+        const p = Vector.new(x, y, 0)
+        const vertex = Vertex.new(p, Color.white())
+        scene.addPoint(vertex)
+    }
+}
+
 const main = () => {
     const w = Config.width
     const h = Config.height
     const canvas = Canvas.new('#id-canvas', w, h)
 
-    testDrawPoints(canvas)
-    testDrawLines(canvas)
-    testDrawTriangles(canvas)
+    // testDrawPoints(canvas)
+    // testDrawLines(canvas)
+    // testDrawTriangles(canvas)
+    testDrawModelPoint(canvas).then()
 }
 
 main()
