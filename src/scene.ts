@@ -76,11 +76,17 @@ export default class Scene {
             this.drawPoint(p.position, p.color)
         }
 
-        const {xMin, yMin, xMax, yMax} = clipWindow
-        this.drawRect(xMin, yMin, xMax, yMax)
+        if (Config.enableClip) {
+            const {xMin, yMin, xMax, yMax} = clipWindow
+            this.drawRect(xMin, yMin, xMax, yMax)
+        }
 
         for (const l of this.lines) {
-            this.drawLine(l.start, l.end)
+            if (Config.enableClip) {
+                this.drawLine(l.start, l.end)
+            } else {
+                this.drawLineWithBresenham(l.start, l.end)
+            }
         }
 
         for (const t of this.triangles) {
