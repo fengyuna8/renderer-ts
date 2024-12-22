@@ -4,6 +4,7 @@ import Color from "./color.ts"
 import Vertex from "./vertex.ts"
 import Line from "./line.ts"
 import Config from "./config.ts"
+import Triangle from "./triangle.ts"
 
 interface ClipWindow {
     xMin: number
@@ -51,6 +52,7 @@ export default class Scene {
     height: number
     points: Vertex[] = []
     lines: Line[] = []
+    triangles: Triangle[] = []
     static new(canvas: Canvas): Scene {
         return new Scene(canvas)
     }
@@ -66,6 +68,9 @@ export default class Scene {
     addLine(line: Line) {
         this.lines.push(line)
     }
+    addTriangle(triangle: Triangle) {
+        this.triangles.push(triangle)
+    }
     draw() {
         for (const p of this.points) {
             this.drawPoint(p.position, p.color)
@@ -73,8 +78,13 @@ export default class Scene {
 
         const {xMin, yMin, xMax, yMax} = clipWindow
         this.drawRect(xMin, yMin, xMax, yMax)
+
         for (const l of this.lines) {
             this.drawLine(l.start, l.end)
+        }
+
+        for (const t of this.triangles) {
+            this.drawTriangle(t)
         }
         this.canvas.putImageData(this.imageData)
     }
@@ -184,6 +194,54 @@ export default class Scene {
             const p1 = Vertex.new(Vector.new(x1, y1, 0), start.color)
             const p2 = Vertex.new(Vector.new(x2, y2, 0), end.color)
             this.drawLineWithBresenham(p1, p2)
+        }
+    }
+    private drawTriangle(triangle: Triangle) {
+        const p1 = triangle.p1
+        const p2 = triangle.p2
+        const p3 = triangle.p3
+        const [pa, pb, pc] = [p1, p2, p3].sort((a, b) => a.position.y - b.position.y)
+        const factor = (pb.position.y - pa.position.y) / (pc.position.y - pa.position.y)
+        const position = pa.position.interpolate(pc.position, factor)
+        const color = pa.color.interpolate(pc.color, factor)
+        const middle = Vertex.new(position, color)
+        console.log('middle', middle.position)
+        this.drawUpperTriangle(pa, pb, middle)
+        this.drawLowerTriangle(pb, middle, pc)
+    }
+    private drawUpperTriangle(pa: Vertex, pb: Vertex, pc: Vertex) {
+        const y1 = pa.position.y
+        const y2 = pc.position.y
+        for (let y = y1; y <= y2; y += 1) {
+            const factor = (y - y1) / (y2 - y1)
+            const p1 = pa.position.interpolate(pb.position, factor)
+            const c1 = pa.color.interpolate(pb.color, factor)
+            const p2 = pa.position.interpolate(pc.position, factor)
+            const c2 = pa.color.interpolate(pc.color, factor)
+            this.drawScanline(Vertex.new(p1, c1), Vertex.new(p2, c2))
+        }
+    }
+    private drawLowerTriangle(pa: Vertex, pb: Vertex, pc: Vertex) {
+        const y1 = pa.position.y
+        const y2 = pc.position.y
+        for (let y = y1; y <= y2; y += 1) {
+            const factor = (y - y1) / (y2 - y1)
+            const p1 = pa.position.interpolate(pc.position, factor)
+            const c1 = pa.color.interpolate(pc.color, factor)
+            const p2 = pb.position.interpolate(pc.position, factor)
+            const c2 = pb.color.interpolate(pc.color, factor)
+            this.drawScanline(Vertex.new(p1, c1), Vertex.new(p2, c2))
+        }
+    }
+    private drawScanline(p1: Vertex, p2: Vertex) {
+        const x1 = p1.position.x
+        const x2 = p2.position.x
+        const sign = x2 > x1 ? 1 : -1
+        for (let x = x1; (sign > 0) ? x < x2 : x > x2; x += sign) {
+            const factor = (x - x1) / (x2 - x1)
+            const p = p1.position.interpolate(p2.position, factor)
+            const c = p1.color.interpolate(p2.color, factor)
+            this.setPixel(Math.round(p.x), Math.round(p.y), c)
         }
     }
     private drawRect(x1: number, y1: number, x2: number, y2: number) {
