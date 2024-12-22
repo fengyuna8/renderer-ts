@@ -202,10 +202,7 @@ export default class Scene {
         const p3 = triangle.p3
         const [pa, pb, pc] = [p1, p2, p3].sort((a, b) => a.position.y - b.position.y)
         const factor = (pb.position.y - pa.position.y) / (pc.position.y - pa.position.y)
-        const position = pa.position.interpolate(pc.position, factor)
-        const color = pa.color.interpolate(pc.color, factor)
-        const middle = Vertex.new(position, color)
-        console.log('middle', middle.position)
+        const middle = pa.interpolate(pc, factor)
         this.drawUpperTriangle(pa, pb, middle)
         this.drawLowerTriangle(pb, middle, pc)
     }
@@ -214,11 +211,9 @@ export default class Scene {
         const y2 = pc.position.y
         for (let y = y1; y <= y2; y += 1) {
             const factor = (y - y1) / (y2 - y1)
-            const p1 = pa.position.interpolate(pb.position, factor)
-            const c1 = pa.color.interpolate(pb.color, factor)
-            const p2 = pa.position.interpolate(pc.position, factor)
-            const c2 = pa.color.interpolate(pc.color, factor)
-            this.drawScanline(Vertex.new(p1, c1), Vertex.new(p2, c2))
+            const v1 = pa.interpolate(pb, factor)
+            const v2 = pa.interpolate(pc, factor)
+            this.drawScanline(v1, v2)
         }
     }
     private drawLowerTriangle(pa: Vertex, pb: Vertex, pc: Vertex) {
@@ -226,11 +221,9 @@ export default class Scene {
         const y2 = pc.position.y
         for (let y = y1; y <= y2; y += 1) {
             const factor = (y - y1) / (y2 - y1)
-            const p1 = pa.position.interpolate(pc.position, factor)
-            const c1 = pa.color.interpolate(pc.color, factor)
-            const p2 = pb.position.interpolate(pc.position, factor)
-            const c2 = pb.color.interpolate(pc.color, factor)
-            this.drawScanline(Vertex.new(p1, c1), Vertex.new(p2, c2))
+            const v1 = pa.interpolate(pc, factor)
+            const v2 = pb.interpolate(pc, factor)
+            this.drawScanline(v1, v2)
         }
     }
     private drawScanline(p1: Vertex, p2: Vertex) {
@@ -239,9 +232,11 @@ export default class Scene {
         const sign = x2 > x1 ? 1 : -1
         for (let x = x1; (sign > 0) ? x < x2 : x > x2; x += sign) {
             const factor = (x - x1) / (x2 - x1)
-            const p = p1.position.interpolate(p2.position, factor)
-            const c = p1.color.interpolate(p2.color, factor)
-            this.setPixel(Math.round(p.x), Math.round(p.y), c)
+            const p = p1.interpolate(p2, factor)
+            const x0 = Math.round(p.position.x)
+            const y0 = Math.round(p.position.y)
+            const c = p.color
+            this.setPixel(x0, y0, c)
         }
     }
     private drawRect(x1: number, y1: number, x2: number, y2: number) {

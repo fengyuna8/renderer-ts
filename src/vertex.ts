@@ -11,4 +11,9 @@ export default class Vertex {
         this.position = position
         this.color = color
     }
+    interpolate(vertex: Vertex, factor: number): Vertex {
+        const position = this.position.interpolate(vertex.position, factor)
+        const color = this.color.interpolate(vertex.color, factor)
+        return Vertex.new(position, color)
+    }
 }
