@@ -4,7 +4,7 @@ import Color from "./color.ts"
 export default class Vertex {
     position: Vector
     color: Color
-    static new(position: Vector, color: Color): Vertex {
+    static new(position: Vector, color: Color = Color.white()): Vertex {
         return new Vertex(position, color)
     }
     constructor(position: Vector, color: Color = Color.black()) {

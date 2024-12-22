@@ -17,4 +17,4 @@
 ![obj model point](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-point.png)
 
 ### obj model line
-![obj model point](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-line.png)
+![obj model line](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-line.png)

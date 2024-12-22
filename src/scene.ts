@@ -62,6 +62,12 @@ export default class Scene {
         this.width = this.imageData.width
         this.height = this.imageData.height
     }
+    viewportTransform(vertex: Vertex) {
+        const x1 = Math.floor((vertex.position.x + 1) / 2 * this.width)
+        const y1 = this.height - Math.floor((vertex.position.y + 1) / 2 * this.height)
+        const p = Vector.new(x1, y1, 0)
+        return Vertex.new(p, vertex.color)
+    }
     addPoint(point: Vertex) {
         this.points.push(point)
     }

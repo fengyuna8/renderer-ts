@@ -63,16 +63,9 @@ const testDrawModelPoint = async (canvas: Canvas) => {
     const vertices = model.vertices
     const scene = canvas.getScene()
 
-    const w = Config.width
-    const h = Config.height
-
     for (const v of vertices) {
-        const x = Math.floor((v.position.x + 1) / 2 * w)
-        // flip Y
-        const y = h - Math.floor((v.position.y + 1) / 2 * h)
-        const p = Vector.new(x, y, 0)
-        const vertex = Vertex.new(p, Color.white())
-        scene.addPoint(vertex)
+        const p = scene.viewportTransform(v)
+        scene.addPoint(p)
     }
 }
 
@@ -82,21 +75,13 @@ const testDrawModelLine = async (canvas: Canvas) => {
     const vertices = model.vertices
     const scene = canvas.getScene()
 
-    const w = Config.width
-    const h = Config.height
-
     for (const f of faces) {
         for (let i = 0; i < 3; i++) {
             const v1 = vertices[f[i]]
             const v2 = vertices[f[(i + 1) % 3]]
-            const x1 = Math.floor((v1.position.x + 1) / 2 * w)
-            const y1 = h - Math.floor((v1.position.y + 1) / 2 * h)
-            const x2 = Math.floor((v2.position.x + 1) / 2 * w)
-            const y2 = h - Math.floor((v2.position.y + 1) / 2 * h)
-
-            const p1 = Vector.new(x1, y1, 0)
-            const p2 = Vector.new(x2, y2, 0)
-            const line = Line.new(Vertex.new(p1, Color.white()), Vertex.new(p2, Color.white()))
+            const p1 = scene.viewportTransform(v1)
+            const p2 = scene.viewportTransform(v2)
+            const line = Line.new(p1, p2)
             scene.addLine(line)
         }
     }
