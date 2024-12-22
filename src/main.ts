@@ -85,7 +85,7 @@ const testDrawModelLine = async (canvas: Canvas) => {
     const w = Config.width
     const h = Config.height
 
-    for (const f of faces.slice(0)) {
+    for (const f of faces) {
         for (let i = 0; i < 3; i++) {
             const v1 = vertices[f[i]]
             const v2 = vertices[f[(i + 1) % 3]]

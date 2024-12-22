@@ -12,3 +12,9 @@
 
 ### triangle
 ![triangle](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/triangle.png)
+
+### obj model point
+![obj model point](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-point.png)
+
+### obj model line
+![obj model point](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-line.png)
