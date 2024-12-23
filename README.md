@@ -18,3 +18,6 @@
 
 ### obj model line
 ![obj model line](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-line.png)
+
+### obj model triangle
+![obj model triangle](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-triangle.png)

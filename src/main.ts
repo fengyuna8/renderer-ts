@@ -87,6 +87,26 @@ const testDrawModelLine = async (canvas: Canvas) => {
     }
 }
 
+const testDrawModelTriangle = async (canvas: Canvas) => {
+    const model = await Model.parseObj('/obj/african_head.obj')
+    const faces = model.faces
+    const vertices = model.vertices
+    const scene = canvas.getScene()
+
+    for (const f of faces.slice(0)) {
+        const v1 = vertices[f[0]]
+        const v2 = vertices[f[1]]
+        const v3 = vertices[f[2]]
+
+        const p1 = scene.viewportTransform(v1)
+        const p2 = scene.viewportTransform(v2)
+        const p3 = scene.viewportTransform(v3)
+        const triangle = Triangle.new(p1, p2, p3)
+        scene.addTriangle(triangle)
+    }
+}
+
+
 const main = () => {
     const w = Config.width
     const h = Config.height
@@ -96,7 +116,8 @@ const main = () => {
     // testDrawLines(canvas)
     // testDrawTriangles(canvas)
     // testDrawModelPoint(canvas).then()
-    testDrawModelLine(canvas).then()
+    // testDrawModelLine(canvas).then()
+    testDrawModelTriangle(canvas).then()
 }
 
 main()
