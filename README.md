@@ -26,4 +26,4 @@
 ![obj model triangle with color](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-triangle-with-color.png)
 
 ### obj model triangle with light intensity
-![obj model triangle with light intensity](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-triangle-with-light-intensity.png)
+![obj model triangle with light intensity](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-light-intensity.png)
