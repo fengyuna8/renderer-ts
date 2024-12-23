@@ -51,6 +51,8 @@ export default class Scene {
     imageData: ImageData
     width: number
     height: number
+    zBuffer: number[]
+
     points: Vertex[] = []
     lines: Line[] = []
     triangles: Triangle[] = []
@@ -64,6 +66,7 @@ export default class Scene {
         this.imageData = canvas.getImageData()
         this.width = this.imageData.width
         this.height = this.imageData.height
+        this.zBuffer = new Array(this.width * this.height).fill(Infinity)
         this.light = Vector.new(0, 0, 1)
     }
     viewportTransform(vertex: Vertex) {
@@ -114,7 +117,8 @@ export default class Scene {
     private drawPoint(point: Vector, color: Color = Color.black()) {
         const x = point.x
         const y = point.y
-        this.setPixel(x, y, color)
+        const z = point.z
+        this.setPixel(x, y, z, color)
     }
     private drawLineWithBresenham(start: Vertex, end: Vertex) {
         const x1 = start.position.x
@@ -131,7 +135,7 @@ export default class Scene {
             for (let x = x1; (signX > 0) ? (x <= x2) : (x >= x2); x += signX) {
                 const factor = (x - x1) / (x2 - x1)
                 const color = start.color.interpolate(end.color, factor)
-                this.setPixel(x, y, color)
+                this.setPixel(x, y, 0, color)
                 error += dy
                 if (2 * error >= dx) {
                     y += signY
@@ -144,7 +148,7 @@ export default class Scene {
             for (let y = y1; (signY > 0) ? (y <= y2) : (y >= y2); y += signY) {
                 const factor = (y - y1) / (y2 - y1)
                 const color = start.color.interpolate(end.color, factor)
-                this.setPixel(x, y, color)
+                this.setPixel(x, y, 0, color)
                 error += dx
                 if (2 * error >= dy) {
                     x += signX
@@ -260,9 +264,10 @@ export default class Scene {
         let x2 = Math.max(a, b)
         for (let x = x1; x < x2; x += 1) {
             const factor = (x - x1) / (x2 - x1)
-            const color = p1.color.interpolate(p2.color, factor)
-            const c = color.multiply(intensity)
-            this.setPixel(x, p1.position.y, c)
+            const p = p1.interpolate(p2, factor)
+            // const color = p1.color.interpolate(p2.color, factor)
+            const c = p.color.multiply(intensity)
+            this.setPixel(x, p1.position.y, p.position.z, c)
         }
     }
     private drawModel(model: Model) {
@@ -290,19 +295,23 @@ export default class Scene {
         const color = Color.new(80, 80, 80, 255)
         for (let x = x1; x <= x2; x += 1) {
             for (let y = y1; y <= y2; y += 1) {
-                this.setPixel(x, y, color)
+                this.setPixel(x, y, 0, color)
             }
         }
     }
-    private setPixel(x: number, y: number, color: Color) {
+    private setPixel(x: number, y: number, z: number, color: Color) {
         x = Math.floor(x)
         y = Math.floor(y)
         const w = this.width
-        const i = (y * w + x) * 4
-        const imageData = this.imageData
-        imageData.data[i] = color.r
-        imageData.data[i + 1] = color.g
-        imageData.data[i + 2] = color.b
-        imageData.data[i + 3] = color.a
+        const index = y * w + x
+        if (z < this.zBuffer[index]) {
+            this.zBuffer[index] = z
+            const imageData = this.imageData
+            const i = (y * w + x) * 4
+            imageData.data[i] = color.r
+            imageData.data[i + 1] = color.g
+            imageData.data[i + 2] = color.b
+            imageData.data[i + 3] = color.a
+        }
     }
 }

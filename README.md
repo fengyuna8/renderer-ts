@@ -27,3 +27,6 @@
 
 ### obj model triangle with light intensity
 ![obj model triangle with light intensity](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-light-intensity.png)
+
+### obj model z-buffer
+![obj model z buffer](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-zbuffer.png)
