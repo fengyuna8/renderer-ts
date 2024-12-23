@@ -93,7 +93,7 @@ const testDrawModelTriangle = async (canvas: Canvas) => {
     const vertices = model.vertices
     const scene = canvas.getScene()
 
-    for (const f of faces.slice(0)) {
+    for (const f of faces) {
         const v1 = vertices[f[0]]
         const v2 = vertices[f[1]]
         const v3 = vertices[f[2]]
@@ -109,6 +109,11 @@ const testDrawModelTriangle = async (canvas: Canvas) => {
     }
 }
 
+const testDrawModel = async (canvas: Canvas) => {
+    const model = await Model.parseObj('/obj/african_head.obj')
+    const scene = canvas.getScene()
+    scene.addModel(model)
+}
 
 const main = () => {
     const w = Config.width
@@ -120,7 +125,8 @@ const main = () => {
     // testDrawTriangles(canvas)
     // testDrawModelPoint(canvas).then()
     // testDrawModelLine(canvas).then()
-    testDrawModelTriangle(canvas).then()
+    // testDrawModelTriangle(canvas).then()
+    testDrawModel(canvas).then()
 }
 
 main()

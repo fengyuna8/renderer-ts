@@ -36,6 +36,9 @@ export default class Color {
         this.b = b
         this.a = a
     }
+    multiply(factor: number) {
+        return Color.new(this.r * factor, this.g * factor, this.b * factor)
+    }
     interpolate(color: Color, factor: number) {
         const r = this.r + (color.r - this.r) * factor
         const g = this.g + (color.g - this.g) * factor
