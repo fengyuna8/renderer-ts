@@ -224,7 +224,11 @@ export default class Scene {
         for (let y = y1; y <= y2; y += 1) {
             const factor = (y - y1) / (y2 - y1)
             const v1 = pa.interpolate(pb, factor)
+            // y = 62.00000000000001
+            // y = 62.99999999999999
+            v1.position.y = y
             const v2 = pa.interpolate(pc, factor)
+            v2.position.y = y
             this.drawScanline(v1, v2)
         }
     }
@@ -239,16 +243,14 @@ export default class Scene {
         }
     }
     private drawScanline(p1: Vertex, p2: Vertex) {
-        const x1 = p1.position.x
-        const x2 = p2.position.x
-        const sign = x2 > x1 ? 1 : -1
-        for (let x = x1; (sign > 0) ? x < x2 : x > x2; x += sign) {
+        let a = p1.position.x
+        let b = p2.position.x
+        let x1 = Math.min(a, b)
+        let x2 = Math.max(a, b)
+        for (let x = x1; x < x2; x += 1) {
             const factor = (x - x1) / (x2 - x1)
-            const p = p1.interpolate(p2, factor)
-            const x0 = Math.round(p.position.x)
-            const y0 = Math.round(p.position.y)
-            const c = p.color
-            this.setPixel(x0, y0, c)
+            const c = p1.color.interpolate(p2.color, factor)
+            this.setPixel(x, p1.position.y, c)
         }
     }
     private drawRect(x1: number, y1: number, x2: number, y2: number) {
@@ -260,6 +262,8 @@ export default class Scene {
         }
     }
     private setPixel(x: number, y: number, color: Color) {
+        x = Math.floor(x)
+        y = Math.floor(y)
         const w = this.width
         const i = (y * w + x) * 4
         const imageData = this.imageData
