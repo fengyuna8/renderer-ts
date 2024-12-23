@@ -101,6 +101,9 @@ const testDrawModelTriangle = async (canvas: Canvas) => {
         const p1 = scene.viewportTransform(v1)
         const p2 = scene.viewportTransform(v2)
         const p3 = scene.viewportTransform(v3)
+        p1.color = Color.randomColor()
+        p2.color = Color.randomColor()
+        p3.color = Color.randomColor()
         const triangle = Triangle.new(p1, p2, p3)
         scene.addTriangle(triangle)
     }

@@ -21,3 +21,6 @@
 
 ### obj model triangle
 ![obj model triangle](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-triangle.png)
+
+### obj model triangle with color
+![obj model triangle with color](https://github.com/fengyuna8/renderer-ts/blob/master/screenshot/obj-model-triangle-with-color.png)
