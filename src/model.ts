@@ -5,6 +5,7 @@ import Color from "./color.ts"
 export default class Model {
     vertices: Vertex[] = []
     faces: number[][] = []
+    uvs: Vector[] = []
     static new() {
         return new Model()
     }
@@ -23,12 +24,21 @@ export default class Model {
                 const c = Color.white()
                 model.vertices.push(Vertex.new(p, c))
             } else if (line.startsWith('f ')) {
-                const f = line.trim().slice(2).split(' ')
-                const i0 = Number(f[0].split('/')[0]) - 1
-                const i1 = Number(f[1].split('/')[0]) - 1
-                const i2 = Number(f[2].split('/')[0]) - 1
-                const face = [i0, i1, i2]
+                const parts = line.trim().slice(2).split(' ')
+                const face: number[] = []
+                for (const part of parts) {
+                    const item = part.split('/')
+                    const vertexIndex = Number(item[0]) - 1
+                    const uvIndex = Number(item[1]) - 1
+                    face.push(vertexIndex)
+                    face.push(uvIndex)
+                }
                 model.faces.push(face)
+            } else if (line.startsWith('vt ')) {
+                const vt = line.slice(3).trim().split(' ')
+                const u = Number(vt[0])
+                const v = Number(vt[1])
+                model.uvs.push(Vector.new(u, v, 0))
             } else {
                 //
             }
